@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, ToastAndroid } from 'react-native';
 import { RoundedButton } from '../../../Presentation/components/RoundedButton';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack'; 
@@ -10,9 +10,14 @@ import styles from './Styles'
 
 const HomeScreen = () => {
 
-    const { email, password, onChange } = useViewModel();
+    const { email, password, errorMessage ,onChange, login } = useViewModel();
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-
+    
+    useEffect(() => {
+      if(errorMessage !== ''){
+        ToastAndroid.show(errorMessage, ToastAndroid.LONG);
+      }
+    },[errorMessage])
   return (
     <View style={styles.container}>
       <Image source={ require('../../../../assets/chef.jpg')} style={styles.imageBackground} />
@@ -48,10 +53,7 @@ const HomeScreen = () => {
        
 
         <View style={{ marginTop: 30}}>
-            <RoundedButton text='INGRESAR' onPress={() => {
-               console.log('Email : ' + email)
-               console.log('Password : ' + password)
-            }} />
+            <RoundedButton text='INGRESAR' onPress={() => login()} />
         </View>
 
         <View style={styles.formRegister}>
